@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Table(name="users")
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserDetails{
+public class Users implements UserDetails{
 	
 
     @Id
@@ -48,19 +48,17 @@ public class User implements UserDetails{
     private List<Booking> booking =new ArrayList<>();
     
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-        )
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles = new HashSet<>();
     
     
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
         // Convert roles to GrantedAuthority objects for Spring Security
-		return this.roles.stream().map(role -> new SimpleGrantedAuthority(role.getName()))
+		List<GrantedAuthority>  lst=this.roles.stream().map(role -> new SimpleGrantedAuthority(role.getName()))
 				.collect(Collectors.toList());
+//		System.out.println("---> "+ lst);
+		return lst;
 	}
 
 	@Override

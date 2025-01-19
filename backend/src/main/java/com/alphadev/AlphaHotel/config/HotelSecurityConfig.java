@@ -27,11 +27,13 @@ public class HotelSecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception 
 	{
+//		System.out.println("-------At SecurityFilterChain----");
+
 		
 		http
 			.csrf().disable()
 			.authorizeHttpRequests()
-			.requestMatchers("/users/register","/auth/login").permitAll()
+			.requestMatchers("/auth/register","/auth/login").permitAll()
 			.anyRequest()
 			.authenticated()
 			.and()
@@ -44,12 +46,14 @@ public class HotelSecurityConfig {
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception
 	{
+//		System.out.println("-------At doAuthenticate 4----");
 		return builder.getAuthenticationManager();
 	}
 	
 	@Bean
 	public PasswordEncoder passwordEncoder()
 	{
+//		System.out.println("-------At PasswordEncoder ----");
 		return new BCryptPasswordEncoder();
 	}
 

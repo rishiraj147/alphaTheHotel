@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alphadev.AlphaHotel.dto.JwtRequest;
 import com.alphadev.AlphaHotel.dto.JwtResponse;
+import com.alphadev.AlphaHotel.model.Users;
 import com.alphadev.AlphaHotel.service.AuthService;
 
 @RestController
@@ -21,7 +22,13 @@ public class AuthController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest jwtRequest) {
+//		System.out.println("-------At AuthController ----");
 		return new ResponseEntity<>(authService.login(jwtRequest),HttpStatus.OK);
+	}
+	
+	@PostMapping("/register")
+	public void register(@RequestBody Users user){
+		authService.register(user);
 	}
 
 }

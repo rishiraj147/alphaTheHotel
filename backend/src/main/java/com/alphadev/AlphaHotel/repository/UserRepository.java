@@ -4,9 +4,12 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.alphadev.AlphaHotel.model.User;
+import com.alphadev.AlphaHotel.model.Users;
 
-public interface UserRepository extends JpaRepository<User,Long>{
+public interface UserRepository extends JpaRepository<Users,Long>{
 	
-	Optional<User> findByUsername(String username);
+	Optional<Users> findByUsername(String username);
+	Optional<Users> findById(Long Id);
+	
+	
 }

@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.alphadev.AlphaHotel.model.User;
 import com.alphadev.AlphaHotel.repository.UserRepository;
 
 @Service

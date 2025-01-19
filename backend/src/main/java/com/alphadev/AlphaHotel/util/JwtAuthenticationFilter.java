@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -35,6 +36,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 		//Bearer yeybaggiwjsbshdhddhf
 		String username =null;
 		String token =null;
+		
+
+//		System.out.println("validating token");
 		if(requestHeader!=null && requestHeader.startsWith("Bearer"))
 		{
 			token = requestHeader.substring(7);
@@ -57,7 +61,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 		filterChain.doFilter(request, response);
 		
 	}
-	
-	
-
 }

@@ -33,7 +33,7 @@ public class Booking {
     
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="user_id")
-    private User user;
+    private Users user;
     
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="room_id")

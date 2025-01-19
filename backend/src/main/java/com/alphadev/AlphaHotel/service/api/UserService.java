@@ -1,14 +1,18 @@
 package com.alphadev.AlphaHotel.service.api;
 
 import java.util.List;
+import java.util.Optional;
 
-import com.alphadev.AlphaHotel.model.User;
+import com.alphadev.AlphaHotel.model.Users;
 
 public interface UserService {
 	
-	void register(User loginRequest);
 
-	List<User> getAllUsers();
+	List<Users> getAllUsers();
+	public Users findByUserName(String username);
+	Users getLoggedInUserProfile();
+	Users getUserById(String userId);
+	void delete(String userId);
 	
 
 }
