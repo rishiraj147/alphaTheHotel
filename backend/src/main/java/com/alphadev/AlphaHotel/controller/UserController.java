@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alphadev.AlphaHotel.dto.Response;
 import com.alphadev.AlphaHotel.model.Users;
 import com.alphadev.AlphaHotel.service.api.UserService;
 
@@ -34,26 +35,35 @@ public class UserController {
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/all")
-	public List<Users> getAllUsers(){
-		return userService.getAllUsers();
+	public ResponseEntity<Response> getAllUsers(){
+		Response response=userService.getAllUsers();
+		return ResponseEntity.status(response.getStatusCode()).body(response);
 	}
 	
 	@GetMapping("/get-by-id/{userId}")
-	public Users getUserById(@PathVariable("userId") String userId) {
-		return userService.getUserById(userId);
+	public ResponseEntity<Response> getUserById(@PathVariable("userId") String userId) {
+		Response response= userService.getUserById(userId);
+		return ResponseEntity.status(response.getStatusCode()).body(response);
 	}
 
 	@DeleteMapping("/delete/{userId}")
-	public void deleteUser(@PathVariable("userId") String userId) {
-		 userService.delete(userId);
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Response>  deleteUser(@PathVariable("userId") String userId) {
+		 Response response=userService.delete(userId);
+		 return ResponseEntity.status(response.getStatusCode()).body(response);
 	}
 	
 	@GetMapping("/get-logged-in-profile-info")
-	public Users getLoggedInUserProfile() {
-		return userService.getLoggedInUserProfile();
+	public ResponseEntity<Response>  getLoggedInUserProfile() {
+		
+		Response response=userService.getLoggedInUserProfile();
+		return ResponseEntity.status(response.getStatusCode()).body(response);
 	}
 	
-
+	@GetMapping("/get-user-bookings/{userId}")
+	public ResponseEntity<Response> getUserBookingHistory(@PathVariable("userId") String userId) {
+		Response response = userService.getUserBookingHistory(userId);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+	}
 	
-
 }

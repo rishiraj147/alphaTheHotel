@@ -10,10 +10,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.alphadev.AlphaHotel.dto.Response;
+import com.alphadev.AlphaHotel.dto.UserDto;
 import com.alphadev.AlphaHotel.model.Users;
 import com.alphadev.AlphaHotel.repository.UserRepository;
 import com.alphadev.AlphaHotel.service.api.UserService;
 import com.alphadev.AlphaHotel.util.JwtUtil;
+import com.alphadev.AlphaHotel.util.Utils;
 
 
 @Service
@@ -26,40 +29,102 @@ public class UserServiceImpl implements UserService{
 	private JwtUtil jwtUtil;
 
 	@Override
-	public List<Users> getAllUsers() {
+	public Response getAllUsers() {
 		// TODO Auto-generated method stub
-		return userRepository.findAll();
+		Response response = new Response();
+		try {
+			List<Users> userList = userRepository.findAll();
+			List<UserDto> userDTOList = Utils.mapUserListEntityToUserListDTO(userList);
+			response.setStatusCode(200);
+            response.setMessage("successful");
+            response.setUserList(userDTOList);
+			
+		}
+		catch(Exception e) {
+            response.setStatusCode(500);
+            response.setMessage("Error getting all users " + e.getMessage());
+		}
+		return response;
 	}
 	
-	public Users findByUserName(String username) {
-		 return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
-		
+	public Response findByUserName(String username) {
+		Response response = new Response();
+		try {
+			Users user=userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+			UserDto userDTO = Utils.mapUserEntityToUserDTO(user);
+			response.setStatusCode(200);
+            response.setMessage("successful");
+            response.setUser(userDTO);
+
+		}
+		catch(Exception e) {
+            response.setStatusCode(500);
+            response.setMessage("Error getting all users " + e.getMessage());
+		}
+		return response;
+	}
+
+	@Override
+	public Response getUserById(String userId) {
+		// TODO Auto-generated method stub
+		Response response = new Response();
+		try {
+			Users user=userRepository.findById(Long.valueOf(userId)).orElseThrow(()->new UsernameNotFoundException("User Id found with username: " + userId));
+			UserDto userDTO = Utils.mapUserEntityToUserDTO(user);
+			response.setStatusCode(200);
+            response.setMessage("successful");
+            response.setUser(userDTO);
+		}
+		catch(Exception e) {
+            response.setStatusCode(500);
+            response.setMessage("Error getting all users " + e.getMessage());
+		}
+		return response;	
+	}
+
+	@Override
+	public Response delete(String userId) {
+		// TODO Auto-generated method stub
+		Response response = new Response();
+		try {
+			userRepository.findById(Long.valueOf(userId)).orElseThrow(()->new UsernameNotFoundException("User Id found with username: " + userId) );
+	        userRepository.deleteById(Long.valueOf(userId));
+	        response.setStatusCode(200);
+            response.setMessage("successful");
+	       }
+		catch (Exception e) {
+            response.setStatusCode(500);
+            response.setMessage("Error getting all users " + e.getMessage());
+		 }
+		return response;
 	}
 	
-	public Users getLoggedInUserProfile() {
+	public Response getLoggedInUserProfile() {
 		Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
 		
 		String userName=jwtUtil.getUsernameFromToken(authentication.getName());
+		
 		return this.findByUserName(userName);
 	}
 
 	@Override
-	public Users getUserById(String userId) {
+	public Response getUserBookingHistory(String userId) {
 		// TODO Auto-generated method stub
-		return userRepository.findById(Long.valueOf(userId)).orElseThrow(()->new UsernameNotFoundException("User Id found with username: " + userId) );
-	}
+		Response response = new Response();
+        try {
+            Users user = userRepository.findById(Long.valueOf(userId)).orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
+            UserDto userDTO = Utils.mapUserEntityToUserDTOPlusUserBookingsAndRoom(user);
+            response.setStatusCode(200);
+            response.setMessage("successful");
+            response.setUser(userDTO);
 
-	@Override
-	public void delete(String userId) {
-		// TODO Auto-generated method stub
-		try {
-			userRepository.findById(Long.valueOf(userId)).orElseThrow(()->new UsernameNotFoundException("User Id found with username: " + userId) );
-	        userRepository.deleteById(Long.valueOf(userId));
-	       }
-		catch (Exception e) {
-			System.out.println(e);
-		 }
-		}
+        }catch (Exception e) {
+            response.setStatusCode(500);
+            response.setMessage("Error getting all users " + e.getMessage());
+        }
+        return response;
+
 	}
+}
 	
 	
