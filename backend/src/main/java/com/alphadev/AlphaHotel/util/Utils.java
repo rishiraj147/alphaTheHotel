@@ -7,9 +7,21 @@ import com.alphadev.AlphaHotel.dto.BookingDto;
 import com.alphadev.AlphaHotel.dto.RoomDto;
 import com.alphadev.AlphaHotel.dto.UserDto;
 import com.alphadev.AlphaHotel.model.Booking;
+import com.alphadev.AlphaHotel.model.Room;
 import com.alphadev.AlphaHotel.model.Users;
 
 public class Utils {
+	
+	public static RoomDto mapRoomEntityToRoomDTO(Room room) {
+        RoomDto roomDTO = new RoomDto();
+
+        roomDTO.setId(room.getId());
+        roomDTO.setRoomType(room.getRoomType());
+        roomDTO.setRoomPrice(room.getRoomPrice());
+        roomDTO.setRoomPhotoUrl(room.getRoomPhotoUrl());
+        roomDTO.setRoomDescription(room.getRoomDescription());
+        return roomDTO;
+    }
 	
     public static UserDto mapUserEntityToUserDTO(Users user) {
         UserDto userDTO = new UserDto();
@@ -66,10 +78,44 @@ public class Utils {
         }
         return userDTO;
     }
+    
+    public static BookingDto mapBookingEntityToBookingDTO(Booking booking) {
+        BookingDto bookingDTO = new BookingDto();
+        // Map simple fields
+        bookingDTO.setId(booking.getId());
+        bookingDTO.setCheckInDate(booking.getCheckInDate());
+        bookingDTO.setCheckOutDate(booking.getCheckOutDate());
+        bookingDTO.setNumOfAdults(booking.getNumOfAdults());
+        bookingDTO.setNumOfChildren(booking.getNumOfChildren());
+        bookingDTO.setTotalNumOfGuest(booking.getTotalNumOfGuest());
+        bookingDTO.setBookingConfirmationCode(booking.getBookingConfirmationCode());
+        return bookingDTO;
+    }
+
+    
+    public static RoomDto mapRoomEntityToRoomDTOPlusBookings(Room room) {
+        RoomDto roomDTO = new RoomDto();
+
+        roomDTO.setId(room.getId());
+        roomDTO.setRoomType(room.getRoomType());
+        roomDTO.setRoomPrice(room.getRoomPrice());
+        roomDTO.setRoomPhotoUrl(room.getRoomPhotoUrl());
+        roomDTO.setRoomDescription(room.getRoomDescription());
+
+        if (room.getBookings() != null) {
+            roomDTO.setBookings(room.getBookings().stream().map(Utils::mapBookingEntityToBookingDTO).collect(Collectors.toList()));
+        }
+        return roomDTO;
+    }
+
 
     
     public static List<UserDto> mapUserListEntityToUserListDTO(List<Users> userList) {
         return userList.stream().map(Utils::mapUserEntityToUserDTO).collect(Collectors.toList());
+    }
+    
+    public static List<RoomDto> mapRoomListEntityToRoomListDTO(List<Room> roomList) {
+        return roomList.stream().map(Utils::mapRoomEntityToRoomDTO).collect(Collectors.toList());
     }
 
 }
