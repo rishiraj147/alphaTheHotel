@@ -1,5 +1,6 @@
 package com.alphadev.AlphaHotel.util;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,7 +13,11 @@ import com.alphadev.AlphaHotel.model.Users;
 
 public class Utils {
 	
+    private static final String ALPHANUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final SecureRandom secureRandom = new SecureRandom();
+	
 	public static RoomDto mapRoomEntityToRoomDTO(Room room) {
+	
         RoomDto roomDTO = new RoomDto();
 
         roomDTO.setId(room.getId());
@@ -117,5 +122,20 @@ public class Utils {
     public static List<RoomDto> mapRoomListEntityToRoomListDTO(List<Room> roomList) {
         return roomList.stream().map(Utils::mapRoomEntityToRoomDTO).collect(Collectors.toList());
     }
+
+    public static String generateRandomConfirmationCode(int length) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int randomIndex = secureRandom.nextInt(ALPHANUMERIC_STRING.length());
+            char randomChar = ALPHANUMERIC_STRING.charAt(randomIndex);
+            stringBuilder.append(randomChar);
+        }
+        return stringBuilder.toString();
+    }
+
+	public static List<BookingDto> mapBookingListEntityToBookingListDTO(List<Booking> bookingList) {
+		// TODO Auto-generated method stub
+		return bookingList.stream().map(Utils::mapBookingEntityToBookingDTO).collect(Collectors.toList());
+	}
 
 }
